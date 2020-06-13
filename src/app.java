@@ -17,6 +17,7 @@ public class app extends Application {
 	public final int width = 1080;
 	public final int height = 720;
 	public final int initialPlatforms = 30;
+	
 	double playerVelocity = 5;
 	double spawnChance = 0.2;
 	
@@ -80,8 +81,11 @@ public class app extends Application {
 		a_Red_bt.relocate(100, 630);
 		a_Red_bt.setStyle("-fx-background-color: red; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 		s_Blue_bt.relocate(200, 630);
+		s_Blue_bt.setStyle("-fx-background-color: lightblue; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
+
 		d_Yellow_bt.relocate(300, 630);
-		
+		d_Yellow_bt.setStyle("-fx-background-color: yellow; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
+
 		
 		
 		Text heighttxt = new Text(playerVelocity+"");
@@ -117,20 +121,26 @@ public class app extends Application {
 			}
 			if(e.getCode() == KeyCode.A)
 			{
-				a_Red_bt.setStyle("-fx-background-color: darkred; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 
 				//---------- TODO: PUT CHANGE COLOR _RED_ CODE HERE ----------//
+				a_Red_bt.setStyle("-fx-background-color: darkred; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 				System.out.println("You hit the A button");
 			}
 			if(e.getCode() == KeyCode.S)
 			{
 				//---------- TODO: PUT CHANGE COLOR _BLUE_ CODE HERE ----------//
+				s_Blue_bt.setStyle("-fx-background-color: #3366ff; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 				System.out.println("You hit the S button");
 			}
 			if(e.getCode() == KeyCode.D)
 			{
 				//---------- TODO: PUT CHANGE COLOR _YELLOW_ CODE HERE ----------//
+				
+				d_Yellow_bt.setStyle("-fx-background-color: #b3b300; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
+
 				System.out.println("You hit the D button");
+				
+				
 			}
 		});
 		
@@ -156,11 +166,13 @@ public class app extends Application {
 			if(e.getCode() == KeyCode.S)
 			{
 				//---------- TODO: PUT CHANGE COLOR _BLUE_ CODE HERE ----------//
+				s_Blue_bt.setStyle("-fx-background-color: lightblue; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 				System.out.println("You hit the S button");
 			}
 			if(e.getCode() == KeyCode.D)
 			{
 				//---------- TODO: PUT CHANGE COLOR _YELLOW_ CODE HERE ----------//
+				d_Yellow_bt.setStyle("-fx-background-color: yellow; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 				System.out.println("You hit the D button");
 			}
 		});
