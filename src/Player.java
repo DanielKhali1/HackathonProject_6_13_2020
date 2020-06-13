@@ -8,15 +8,16 @@ public class Player
 	Vector acceleration;
 	Vector position;
 
-	Circle playerBody = new Circle(4);
+	Circle playerBody = new Circle(20);
 	
 	public Player(Vector Pos, double moveSpeed, double gravity)
 	{
-		velocity = new Vector(0, 0);	
+		velocity = new Vector(0, -5);	
 		acceleration = new Vector (0, 0);
 		this.moveSpeed = moveSpeed;
 		this.gravity = gravity; 
 		this.position = Pos; 
+		updateCircle();
 	}
 	
 	void moveLeft()
@@ -24,6 +25,7 @@ public class Player
 		Vector tempVector;
 		tempVector = new Vector(moveSpeed, 0);
 		position.subVector(tempVector);
+		updateCircle();
 	}
 	 
 	void moveRight()
@@ -31,6 +33,7 @@ public class Player
 		Vector tempVector;
 		tempVector = new Vector(moveSpeed, 0);
 		position.addVector(tempVector);
+		updateCircle();
 	}
 	 
 	void updatePos()
@@ -38,8 +41,12 @@ public class Player
 		 acceleration = new Vector (0, gravity);
 		 velocity.addVector(acceleration);
 		 position.addVector(velocity);
-		 
-		 playerBody.setLayoutX(position.x);
-		 playerBody.setLayoutY(position.y);
+		 updateCircle();
+	}
+	
+	void updateCircle()
+	{
+		playerBody.setLayoutX(position.x);
+		playerBody.setLayoutY(position.y);
 	}
 }

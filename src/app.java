@@ -21,10 +21,15 @@ public class app extends Application {
 	
 	double playerVelocity = 5;
 	double spawnChance = 0.2;
+	public final double MOVESPEED = 8;
+	public final double GRAVITY = .1;
+	boolean movingLeft = false;
+	boolean movingRight = false;
 	
 	Button a_Red_bt = new Button("A");
 	Button s_Blue_bt = new Button("S");
 	Button d_Yellow_bt = new Button("D");
+	Player player = new Player(new Vector(width/2, height/2), MOVESPEED, GRAVITY);
 
 	
 	Pane pane = new Pane();
@@ -43,6 +48,22 @@ public class app extends Application {
 	private void update() 
 	{
 		updatePlatform();
+
+
+		
+		if(movingRight)
+		{
+			player.moveRight();
+		}
+		
+		if(movingLeft)
+		{
+			player.moveLeft();
+		}
+		
+		System.out.println(player.position.x + ", " + player.position.y);
+		player.updatePos();
+		
 	}	
 	
 	void updatePlatform()
@@ -85,6 +106,10 @@ public class app extends Application {
 		
 		takeKeyInput();
 		
+		/*a_Red_bt.setDisable(true);
+		s_Blue_bt.setDisable(true);
+		d_Yellow_bt.setDisable(true);
+		*/
 		a_Red_bt.relocate(100, 630);
 		a_Red_bt.setStyle("-fx-background-color: red; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 		s_Blue_bt.relocate(200, 630);
@@ -108,7 +133,7 @@ public class app extends Application {
 		}
 		
 		
-		
+		pane.getChildren().add(player.playerBody);
 		pane.getChildren().addAll(a_Red_bt, s_Blue_bt, d_Yellow_bt);
 	}
 	
@@ -118,10 +143,12 @@ public class app extends Application {
 		(e->{
 			if(e.getCode() == KeyCode.RIGHT)
 			{
+				movingRight = true; 
 				//---------- TODO: PUT MOVE RIGHT CODE HERE ----------//
 			}
 			if(e.getCode() == KeyCode.LEFT)
 			{
+				movingLeft = true; 
 				//---------- TODO: PUT MOVE LEFT CODE HERE ----------//
 			}
 			if(e.getCode() == KeyCode.A)
@@ -158,10 +185,12 @@ public class app extends Application {
 		(e->{
 			if(e.getCode() == KeyCode.RIGHT)
 			{
+				movingRight = false;
 				//---------- TODO: PUT MOVE RIGHT CODE HERE ----------//
 			}
 			if(e.getCode() == KeyCode.LEFT)
 			{
+				movingLeft = false; 
 				//---------- TODO: PUT MOVE LEFT CODE HERE ----------//
 			}
 			if(e.getCode() == KeyCode.A)
