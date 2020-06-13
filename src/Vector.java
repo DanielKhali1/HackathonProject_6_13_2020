@@ -1,17 +1,20 @@
 
 public class Vector 
 {
-	int x;
-	int y;
+	public int x;
+	public int y;
 	
 	public Vector(int x, int y)
+	{
+	}
+	
+	public Vector()
 	{
 		
 	}
 	
-	void addVector()
+	void addVector(Vector vect)
 	{
-		
 	}
 	
 	void subVector()
