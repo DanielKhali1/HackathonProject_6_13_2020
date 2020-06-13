@@ -7,7 +7,7 @@ public class Platform
 	// attributes: variables
 	// methods: 	functions
 	private Rectangle rect;
-	
+	int color;
 	
 	/**
 	 * 
@@ -27,11 +27,12 @@ public class Platform
 		int random = (int)(Math.random() *  3);
 		
 		switch(random){
-			case 0: rect.setFill(Color.RED); break;
-			case 1: rect.setFill(Color.GOLD); break;
-			case 2: rect.setFill(Color.CORNFLOWERBLUE); break;
+			case 0: rect.setFill(Color.RED); color = 1; break;
+			case 1: rect.setFill(Color.GOLD); color = 3;break;
+			case 2: rect.setFill(Color.CORNFLOWERBLUE);color = 2; break;
 		}
 		rect.setStroke(Color.BLACK);
+		 
 	}
 	
 	public Rectangle getRect() {
