@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -32,38 +33,44 @@ public class app extends Application {
 	
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
+	int[] colors = { 1, 0, 0 };
+	
+	
 	/*
 	 * RUNS PER FRAME OF THE GAME
 	 * 
 	 */
 	private void update() 
 	{
-		updatePlatformHeight();
+		updatePlatform();
 	}	
 	
-	void updatePlatformHeight()
+	void updatePlatform()
 	{
 		//make a random chance of spawning
-		
 		for(int i = 0; i < platforms.size(); i++)
 		{
+			//if red
+			if( ( colors[0] == 1 && platforms.get(i).color == 1) 
+					|| (colors[2] == 1 && platforms.get(i).color == 3)
+					|| (colors[1] == 1 && platforms.get(i).color == 2) )
+				platforms.get(i).getRect().setStyle("-fx-opacity: 1");
+			else
+				platforms.get(i).getRect().setStyle("-fx-opacity: 0.2");
+			
 			platforms.get(i).getRect().setLayoutY(platforms.get(i).getRect().getLayoutY()+playerVelocity);
 			if(platforms.get(i).getRect().getLayoutY() > height)
 			{
 				platforms.remove(i);
 				i--;
-				
-				for(int j = 0; j < 5; j++)
-				{
-					
-					if(Math.random() < spawnChance)
-					{
-						platforms.add(new Platform((int)((width * Math.random())/100) * 100 ,-20, 100, 20));
-						gamePane.getChildren().add(platforms.get(platforms.size()-1).getRect());
-						
-					}
-				}
 			}
+		}
+		
+		if(Math.random() < spawnChance)
+		{
+			platforms.add(new Platform((int)((width * Math.random())/100) * 100 ,-20, 100, 20));
+			gamePane.getChildren().add(platforms.get(platforms.size()-1).getRect());
+			
 		}
 	}
 	
@@ -112,34 +119,37 @@ public class app extends Application {
 			if(e.getCode() == KeyCode.RIGHT)
 			{
 				//---------- TODO: PUT MOVE RIGHT CODE HERE ----------//
-				System.out.println("You hit the right button");
 			}
 			if(e.getCode() == KeyCode.LEFT)
 			{
 				//---------- TODO: PUT MOVE LEFT CODE HERE ----------//
-				System.out.println("You hit the left button");
 			}
 			if(e.getCode() == KeyCode.A)
 			{
 
 				//---------- TODO: PUT CHANGE COLOR _RED_ CODE HERE ----------//
 				a_Red_bt.setStyle("-fx-background-color: darkred; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
-				System.out.println("You hit the A button");
+				colors[0] = 1;
+				colors[1] = 0;
+				colors[2] = 0;
+
 			}
 			if(e.getCode() == KeyCode.S)
 			{
 				//---------- TODO: PUT CHANGE COLOR _BLUE_ CODE HERE ----------//
 				s_Blue_bt.setStyle("-fx-background-color: #3366ff; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
-				System.out.println("You hit the S button");
+				colors[0] = 0;
+				colors[1] = 1;
+				colors[2] = 0;
 			}
 			if(e.getCode() == KeyCode.D)
 			{
 				//---------- TODO: PUT CHANGE COLOR _YELLOW_ CODE HERE ----------//
 				
 				d_Yellow_bt.setStyle("-fx-background-color: #b3b300; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
-
-				System.out.println("You hit the D button");
-				
+				colors[0] = 0;
+				colors[1] = 0;
+				colors[2] = 1;
 				
 			}
 		});
@@ -149,31 +159,26 @@ public class app extends Application {
 			if(e.getCode() == KeyCode.RIGHT)
 			{
 				//---------- TODO: PUT MOVE RIGHT CODE HERE ----------//
-				System.out.println("You hit the right button");
 			}
 			if(e.getCode() == KeyCode.LEFT)
 			{
 				//---------- TODO: PUT MOVE LEFT CODE HERE ----------//
-				System.out.println("You hit the left button");
 			}
 			if(e.getCode() == KeyCode.A)
 			{
 				a_Red_bt.setStyle("-fx-background-color: red; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 
 				//---------- TODO: PUT CHANGE COLOR _RED_ CODE HERE ----------//
-				System.out.println("You hit the A button");
 			}
 			if(e.getCode() == KeyCode.S)
 			{
 				//---------- TODO: PUT CHANGE COLOR _BLUE_ CODE HERE ----------//
 				s_Blue_bt.setStyle("-fx-background-color: lightblue; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
-				System.out.println("You hit the S button");
 			}
 			if(e.getCode() == KeyCode.D)
 			{
 				//---------- TODO: PUT CHANGE COLOR _YELLOW_ CODE HERE ----------//
 				d_Yellow_bt.setStyle("-fx-background-color: yellow; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
-				System.out.println("You hit the D button");
 			}
 		});
 	}
