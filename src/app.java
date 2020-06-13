@@ -17,12 +17,14 @@ public class app extends Application {
 
 	public final int width = 1080;
 	public final int height = 720;
-	public final int initialPlatforms = 30;
+	public final int initialPlatforms = 5;
 	
-	double playerVelocity = 5;
-	double spawnChance = 0.2;
-	public final double MOVESPEED = 8;
-	public final double GRAVITY = .1;
+	double playerVelocity = 0;
+	double spawnChance = 0.02;
+	public final double MOVESPEED = 10;
+	public final double GRAVITY = .3;
+	public final double BOUNCE_SPEED = 13;
+	
 	boolean movingLeft = false;
 	boolean movingRight = false;
 	
@@ -47,9 +49,8 @@ public class app extends Application {
 	 */
 	private void update() 
 	{
+		
 		updatePlatform();
-
-
 		
 		if(movingRight)
 		{
@@ -60,10 +61,36 @@ public class app extends Application {
 		{
 			player.moveLeft();
 		}
+
 		
-		System.out.println(player.position.x + ", " + player.position.y);
 		player.updatePos();
 		
+		
+		
+		
+		if((player.position.y < height/1.2 && player.velocity.y < 0 ))
+			playerVelocity = -player.velocity.y;
+		else if((player.position.y < height/1.5 && player.velocity.y < 0 ))
+			playerVelocity = -player.velocity.y;
+		else
+			playerVelocity = 0;
+
+		for(int i = 0; i < platforms.size(); i++)
+		{
+			if (player.playerBody.getLayoutX()-player.playerBody.getRadius() < platforms.get(i).getRect().getLayoutX() + platforms.get(i).getRect().getWidth() &&
+					player.playerBody.getLayoutX()+player.playerBody.getRadius() > platforms.get(i).getRect().getLayoutX() &&
+					player.playerBody.getLayoutY() < platforms.get(i).getRect().getLayoutY() + platforms.get(i).getRect().getHeight() &&
+					player.playerBody.getLayoutY() + player.playerBody.getRadius() > platforms.get(i).getRect().getLayoutY()
+					&& player.velocity.y > 0 && ( ( colors[0] == 1 && platforms.get(i).color == 1) 
+							|| (colors[2] == 1 && platforms.get(i).color == 3)
+							|| (colors[1] == 1 && platforms.get(i).color == 2))) 
+			{
+				player.position.y = platforms.get(i).getRect().getLayoutY() - player.playerBody.getRadius();
+				player.velocity = new Vector(0, -BOUNCE_SPEED);
+				break;
+				
+			}
+		}		
 	}	
 	
 	void updatePlatform()
@@ -79,9 +106,10 @@ public class app extends Application {
 			else
 				platforms.get(i).getRect().setStyle("-fx-opacity: 0.2");
 			
-			platforms.get(i).getRect().setLayoutY(platforms.get(i).getRect().getLayoutY()+playerVelocity);
+			platforms.get(i).getRect().setLayoutY(platforms.get(i).getRect().getLayoutY()+Math.abs(playerVelocity));
 			if(platforms.get(i).getRect().getLayoutY() > height)
 			{
+				pane.getChildren().remove(platforms.get(i).getRect());
 				platforms.remove(i);
 				i--;
 			}
