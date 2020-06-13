@@ -8,7 +8,7 @@ public class Player
 	Vector acceleration;
 	Vector position;
 
-	Circle playerBody = new Circle(4);
+	Circle playerBody = new Circle(20);
 	
 	public Player(Vector Pos, double moveSpeed, double gravity)
 	{
@@ -17,6 +17,8 @@ public class Player
 		this.moveSpeed = moveSpeed;
 		this.gravity = gravity; 
 		this.position = Pos; 
+		playerBody.setLayoutX(position.x);
+		playerBody.setLayoutY(position.y);
 	}
 	
 	void moveLeft()

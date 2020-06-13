@@ -19,10 +19,13 @@ public class app extends Application {
 	public final int initialPlatforms = 30;
 	double playerVelocity = 5;
 	double spawnChance = 0.2;
+	public final double MOVESPEED = 0;
+	public final double GRAVITY = 0;
 	
 	Button a_Red_bt = new Button("A");
 	Button s_Blue_bt = new Button("S");
 	Button d_Yellow_bt = new Button("D");
+	Player player = new Player(new Vector(width/2, height/2), MOVESPEED, GRAVITY);
 
 	
 	Pane pane = new Pane();
@@ -97,7 +100,7 @@ public class app extends Application {
 		}
 		
 		
-		
+		pane.getChildren().add(player.playerBody);
 		pane.getChildren().addAll(a_Red_bt, s_Blue_bt, d_Yellow_bt);
 	}
 	
