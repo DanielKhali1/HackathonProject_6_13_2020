@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.text.TextAlignment;
 
 public class app extends Application {
 
@@ -29,18 +30,23 @@ public class app extends Application {
 	public final double MOVESPEED = 10;
 	public final double GRAVITY = .3;
 	public final double BOUNCE_SPEED = 13;
+	public final int IMAGESIZE = 50; 
 	
 	boolean movingLeft = false;
+	boolean isDead = false; 
 	boolean movingRight = false;
 	
 	Button a_Red_bt = new Button("A");
 	Button s_Blue_bt = new Button("S");
 	Button d_Yellow_bt = new Button("D");
-	Player player = new Player(new Vector(width/2, height/2), MOVESPEED, GRAVITY);
+	Player player = new Player(new Vector(width/2, height/2), MOVESPEED, GRAVITY, IMAGESIZE);
 
+	Button play_bt = new Button("PLAY");
+	Button hiscore_bt = new Button("HI-SCORE");
 	
 	Pane pane = new Pane();
 	Pane gamePane = new Pane();
+	Pane titlePane = new Pane();
 	Scene scene = new Scene(pane, width, height);
 	
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
@@ -51,7 +57,10 @@ public class app extends Application {
 	int[] colors = { 1, 0, 0 };
 	
 	int score = 0;
+	
 	Text heighttxt;
+	Text titletxt;
+	Text deathtxt; 
 	
 	/*
 	 * RUNS PER FRAME OF THE GAME
@@ -71,7 +80,6 @@ public class app extends Application {
 		{
 			player.moveLeft();
 		}
-
 		
 		player.updatePos();
 		
@@ -157,7 +165,12 @@ public class app extends Application {
 				break;
 				
 			}
-		}		
+		}
+		
+		if (player.position.y > height)
+		{
+			isDead = true; 
+		}
 	}	
 	
 	void updatePlatform()
@@ -194,7 +207,7 @@ public class app extends Application {
 	 * RUNS BEFORE THE GAME LOOP STARTS
 	 * 
 	 */
-	private void initialize() 
+	private void initialize(Stage primaryStage) 
 	{
 		
 		try {
@@ -221,24 +234,36 @@ public class app extends Application {
 		
 		
 		pane.getChildren().add(gamePane);
+		pane.getChildren().add(titlePane);
 		
-		takeKeyInput();
+		takeKeyInput(primaryStage);
 		
 		a_Red_bt.relocate(100, 630);
 		a_Red_bt.setStyle("-fx-background-color: red; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 		s_Blue_bt.relocate(200, 630);
 		s_Blue_bt.setStyle("-fx-background-color: lightblue; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
-
 		d_Yellow_bt.relocate(300, 630);
 		d_Yellow_bt.setStyle("-fx-background-color: yellow; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 
+		titletxt = new Text("Jumpy Boi");
+		titletxt.relocate(320, 220);
+		titletxt.setStyle("-fx-font-size: 80; -fx-font-weight: bold");
 		
+		play_bt.relocate(470, 350);
+		play_bt.setStyle("-fx-background-color: white; -fx-font-size: 30; -fx-font-weight: bold; -fx-border-color: black; -fx-border-width: 5");
+		
+		hiscore_bt.relocate(438, 450);
+		hiscore_bt.setStyle("-fx-background-color: white; -fx-font-size: 30; -fx-font-weight: bold; -fx-border-color: black; -fx-border-width: 5");
 		
 		heighttxt = new Text("Score: " + score+"");
 		heighttxt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
 		heighttxt.relocate(20, 20);
 		pane.getChildren().add(heighttxt);
 		
+		deathtxt = new Text("Looks like you chose the wrong color!\nPress 'R' to restart.");
+		deathtxt.setTextAlignment(TextAlignment.CENTER);
+		deathtxt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
+		deathtxt.relocate(275, 200);
 		
 		for(int i = 0; i < initialPlatforms; i++)
 		{
@@ -249,9 +274,13 @@ public class app extends Application {
 		
 		pane.getChildren().add(player.playerBody);
 		pane.getChildren().addAll(a_Red_bt, s_Blue_bt, d_Yellow_bt);
+		pane.getChildren().add(deathtxt);
+		
+		
+		titlePane.getChildren().addAll(titletxt, play_bt, hiscore_bt);
 	}
 	
-	private void takeKeyInput() 
+	private void takeKeyInput(Stage primaryStage) 
 	{
 		scene.setOnKeyPressed
 		(e->{
@@ -295,6 +324,14 @@ public class app extends Application {
 				colors[2] = 1;
 				player.changeImage("slimeYellow.png");
 			}
+			if(e.getCode() == KeyCode.R)
+			{
+				if(isDead == true)
+				{
+					primaryStage.close();
+					//System.exit(1);
+				}
+			}
 		});
 		
 		scene.setOnKeyReleased
@@ -334,10 +371,10 @@ public class app extends Application {
 		});
 	}
 
-	public void Game()
+	public void Game(Stage primaryStage)
 	{
 		// initializes the game state
-		initialize();
+		initialize(primaryStage);
 		
 		// begins the game loop
 		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), (ActionEvent event) -> {
@@ -351,9 +388,10 @@ public class app extends Application {
 	@Override
 	public void start(Stage primaryStage)
 	{	
-		Game();
+		Game(primaryStage);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Hackathon Project");
+		primaryStage.setTitle("Only One Color Keeping It Alive");
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 

@@ -6,10 +6,10 @@ public class Player
 {
 	double moveSpeed;
 	double gravity;
+	int imageSize;
 	Vector velocity;
 	Vector acceleration;
 	Vector position;
-
 	
 	Image img;
 	ImageView playerBody;
@@ -17,20 +17,21 @@ public class Player
 	boolean lr = false;
 	double rotation;
 	
-	public Player(Vector Pos, double moveSpeed, double gravity)
+	public Player(Vector Pos, double moveSpeed, double gravity, int imageSize)
 	{
 		rotation = 0;
 		img = new Image("res/slimeRed.png");
 		playerBody = new ImageView(img);
 		
-		playerBody.setFitHeight(75);
-		playerBody.setFitWidth(75);
+		playerBody.setFitHeight(imageSize);
+		playerBody.setFitWidth(imageSize);
 		
 		velocity = new Vector(0, -5);	
 		acceleration = new Vector (0, 0);
 		this.moveSpeed = moveSpeed;
 		this.gravity = gravity; 
 		this.position = Pos; 
+		this.imageSize = imageSize; 
 		updateCircle();
 	}
 	
@@ -38,8 +39,8 @@ public class Player
 	{
 		img = new Image("res/" + file);
 		playerBody.setImage(img);
-		playerBody.setFitHeight(75);
-		playerBody.setFitWidth(75);
+		playerBody.setFitHeight(imageSize);
+		playerBody.setFitWidth(imageSize);
 	}
 	
 	void moveLeft()
