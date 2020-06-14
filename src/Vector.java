@@ -46,4 +46,9 @@ public class Vector
 		divVector(returnMag());
 	}
 	
+	public Vector clone()
+	{
+		return new Vector(this.x, this.y);
+	}
+	
 }

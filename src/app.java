@@ -1,13 +1,18 @@
 import java.util.ArrayList;
 
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -21,7 +26,7 @@ public class app extends Application {
 	public final int initialPlatforms = 50;
 	
 	double playerVelocity = 0;
-	double spawnChance = 0.05;
+	double spawnChance = 0.08;
 	public final double MOVESPEED = 10;
 	public final double GRAVITY = .3;
 	public final double BOUNCE_SPEED = 13;
@@ -46,6 +51,9 @@ public class app extends Application {
 	
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
+	ArrayList<ParticleSystem> particleSystems = new ArrayList<ParticleSystem>();
+	Media m;
+    MediaPlayer mp;
 	int[] colors = { 1, 0, 0 };
 	
 	int score = 0;
@@ -81,7 +89,39 @@ public class app extends Application {
 		
 		heighttxt.setText("Score: " + score+"");
 		
-		if((player.position.y < height/1.2 && player.velocity.y < 0 ))
+		
+		for(int i = 0 ; i < particleSystems.size(); i++)
+		{
+			if(particleSystems.get(i).particles.size() == 0)
+			{
+				particleSystems.remove(i);
+				break;
+			}
+		}
+		
+		for(int i = 0 ; i < particleSystems.size(); i++)
+		{
+			particleSystems.get(i).update(gamePane);
+		}
+		
+		
+		
+		/**
+		 * FUNCTIONALITY THAT FORCES PLAYER (IF OUT OF BOUNDS) TELEPORT TO OTHER SIDE OF SCREEN
+		 */
+		if(player.position.x < -player.playerBody.getFitWidth()) player.position.x = width;
+		if(player.position.x > width) player.position.x = 0-player.playerBody.getFitWidth();
+		
+		
+		
+		
+		if(player.position.y < 10)
+		{
+			playerVelocity = 20;
+			if(player.velocity.y < 0)
+				player.velocity.multVector(0.5);
+		}
+		else if((player.position.y < height/1.2 && player.velocity.y < 0 ))
 			playerVelocity = -player.velocity.y;
 		else if((player.position.y < height/1.5 && player.velocity.y < 0 ))
 			playerVelocity = -player.velocity.y;
@@ -100,6 +140,28 @@ public class app extends Application {
 			{
 				player.position.y = platforms.get(i).getRect().getLayoutY() - player.playerBody.getFitHeight();
 				player.velocity = new Vector(0, -BOUNCE_SPEED);
+				
+				if(platforms.get(i).color == 1)
+				{
+					particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.RED)));
+					particleSystems.get(particleSystems.size()-1).play(gamePane);
+				}
+				else if(platforms.get(i).color == 3)
+				{
+					particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.YELLOW)));
+					particleSystems.get(particleSystems.size()-1).play(gamePane);
+				}
+				else if(platforms.get(i).color == 2)
+				{
+					particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.BLUE)));
+					particleSystems.get(particleSystems.size()-1).play(gamePane);
+				}				
+				gamePane.getChildren().remove(platforms.get(i).getRect());
+				
+				platforms.remove(i);
+				
+				
+				
 				break;
 				
 			}
@@ -127,7 +189,7 @@ public class app extends Application {
 			platforms.get(i).getRect().setLayoutY(platforms.get(i).getRect().getLayoutY()+Math.abs(playerVelocity));
 			if(platforms.get(i).getRect().getLayoutY() > height)
 			{
-				pane.getChildren().remove(platforms.get(i).getRect());
+				gamePane.getChildren().remove(platforms.get(i).getRect());
 				platforms.remove(i);
 				i--;
 			}
@@ -147,6 +209,29 @@ public class app extends Application {
 	 */
 	private void initialize(Stage primaryStage) 
 	{
+		
+		try {
+			m = new Media(getClass().getResource("res/BeepBox-Song.wav").toString());
+		    mp = new MediaPlayer(m);
+//	        Runnable onEnd = new Runnable() {
+//	            @Override
+//	            public void run() {
+	                mp.dispose();
+	                mp = new MediaPlayer(m);
+	                mp.setAutoPlay(true);
+	                mp.setCycleCount(MediaPlayer.INDEFINITE);
+	                mp.play();
+//	            }
+//	        };
+//	        mp.setOnEndOfMedia(onEnd);
+//	        mp.play();
+	    } catch (Exception ex) {
+	        Alert al = new Alert(AlertType.ERROR);
+	        al.setContentText(ex.getMessage());
+	        al.showAndWait();
+	        ex.printStackTrace();
+		}
+		
 		
 		pane.getChildren().add(gamePane);
 		pane.getChildren().add(titlePane);
@@ -264,6 +349,8 @@ public class app extends Application {
 			if(e.getCode() == KeyCode.A)
 			{
 				a_Red_bt.setStyle("-fx-background-color: red; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
+				particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 5, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.RED)));
+				particleSystems.get(particleSystems.size()-1).play(gamePane);
 
 				//---------- TODO: PUT CHANGE COLOR _RED_ CODE HERE ----------//
 			}
@@ -271,11 +358,15 @@ public class app extends Application {
 			{
 				//---------- TODO: PUT CHANGE COLOR _BLUE_ CODE HERE ----------//
 				s_Blue_bt.setStyle("-fx-background-color: lightblue; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
+				particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 5, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.BLUE)));
+				particleSystems.get(particleSystems.size()-1).play(gamePane);
 			}
 			if(e.getCode() == KeyCode.D)
 			{
 				//---------- TODO: PUT CHANGE COLOR _YELLOW_ CODE HERE ----------//
 				d_Yellow_bt.setStyle("-fx-background-color: yellow; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
+				particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 5, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.YELLOW)));
+				particleSystems.get(particleSystems.size()-1).play(gamePane);
 			}
 		});
 	}
