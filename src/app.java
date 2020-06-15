@@ -62,6 +62,8 @@ public class app extends Application {
 	Text titletxt;
 	Text deathtxt; 
 	
+	Timeline timeline;
+	
 	/*
 	 * RUNS PER FRAME OF THE GAME
 	 * 
@@ -170,6 +172,8 @@ public class app extends Application {
 		if (player.position.y > height)
 		{
 			isDead = true; 
+			deathtxt.setVisible(true);
+
 		}
 	}	
 	
@@ -264,6 +268,10 @@ public class app extends Application {
 		deathtxt.setTextAlignment(TextAlignment.CENTER);
 		deathtxt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
 		deathtxt.relocate(275, 200);
+		deathtxt.setVisible(false);
+		
+		
+		
 		
 		for(int i = 0; i < initialPlatforms; i++)
 		{
@@ -278,6 +286,7 @@ public class app extends Application {
 		
 		
 		titlePane.getChildren().addAll(titletxt, play_bt, hiscore_bt);
+		titlePane.setVisible(false);
 	}
 	
 	private void takeKeyInput(Stage primaryStage) 
@@ -328,8 +337,7 @@ public class app extends Application {
 			{
 				if(isDead == true)
 				{
-					primaryStage.close();
-					//System.exit(1);
+					System.exit(1);
 				}
 			}
 		});
@@ -377,7 +385,7 @@ public class app extends Application {
 		initialize(primaryStage);
 		
 		// begins the game loop
-		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), (ActionEvent event) -> {
+		timeline = new Timeline(new KeyFrame(Duration.millis(20), (ActionEvent event) -> {
 			update();
 		}));
 		
