@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -14,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -57,6 +59,9 @@ public class app extends Application {
     MediaPlayer mp;
     Media sfx;
     MediaPlayer mpsfx;
+    
+	Media switchm;
+	MediaPlayer switchc;
     
 	int[] colors = { 1, 0, 0 };
 	
@@ -226,6 +231,9 @@ public class app extends Application {
 	{
 
 		try {
+			switchm = new Media(getClass().getResource("res/switch.wav").toString());
+			switchc = new MediaPlayer(switchm);
+		    ((Pane)scene.getRoot()).getChildren().add(new MediaView(switchc));
 			m = new Media(getClass().getResource("res/BeepBox-Song.wav").toString());
 		    mp = new MediaPlayer(m);
 //	        Runnable onEnd = new Runnable() {
@@ -360,18 +368,10 @@ public class app extends Application {
 			
 			if(e.getCode() == KeyCode.A || e.getCode() == KeyCode.S || e.getCode() == KeyCode.D )
 			{
-				Task task = new Task<Void>() {
-					@Override public Void call() {
-							
-						// TODO Auto-generated method stub
-						Media sfx = new Media(getClass().getResource("res/switch.wav").toString());
-						MediaPlayer mpsfx = new MediaPlayer(sfx);
-						mpsfx.play();
-						return null;
+				switchc.seek(switchc.getStartTime());	
+				switchc.play();
 						
-				}};
 				
-				new Thread(task).start();
 			}
 		});
 		
