@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,7 +21,6 @@ import javafx.scene.text.TextAlignment;
 
 public class app extends Application {
 
-	Timeline timeline;
 	
 	public final int width = 1080;
 	public final int height = 720;
@@ -168,11 +168,13 @@ public class app extends Application {
 				platforms.remove(i);
 				
 				
-				
+				sfx = new Media(getClass().getResource("res/boingboi.wav").toString());
+				mpsfx = new MediaPlayer(sfx);
+				mpsfx.play();
 				break;
 				
 			}
-			mpsfx.play();
+			
 		}
 		
 		if (player.position.y > height)
@@ -229,9 +231,9 @@ public class app extends Application {
 //	            public void run() {
 	               // mp.dispose();
 	                mp = new MediaPlayer(m);
-	                mp.setAutoPlay(false);
-	                mp.play();
+	                mp.setAutoPlay(true);
 	                mp.setCycleCount(MediaPlayer.INDEFINITE);
+	                mp.play();
 	                
 //	            }
 //	        };
@@ -244,7 +246,7 @@ public class app extends Application {
 	        ex.printStackTrace();
 		}
 		
-		sfx = new Media(getClass().getResource("res/boingboi.MP3").toString());
+		sfx = new Media(getClass().getResource("res/boingboi.mp3").toString());
 		mpsfx = new MediaPlayer(sfx);
 		
 		pane.getChildren().add(gamePane);
@@ -353,6 +355,22 @@ public class app extends Application {
 			if(e.getCode() == KeyCode.UP)
 			{
 				timeline.play();
+			}
+			
+			if(e.getCode() == KeyCode.A || e.getCode() == KeyCode.S || e.getCode() == KeyCode.D )
+			{
+				Task task = new Task<Void>() {
+					@Override public Void call() {
+							
+						// TODO Auto-generated method stub
+						Media sfx = new Media(getClass().getResource("res/switch.wav").toString());
+						MediaPlayer mpsfx = new MediaPlayer(sfx);
+						mpsfx.play();
+						return null;
+						
+				}};
+				
+				new Thread(task).start();
 			}
 		});
 		
