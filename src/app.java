@@ -165,12 +165,12 @@ public class app extends Application {
 				
 				platforms.remove(i);
 				
-				
+				mpsfx.play();
 				
 				break;
 				
 			}
-			mpsfx.play();
+			
 		}
 		
 		if (player.position.y > height)
@@ -223,12 +223,11 @@ public class app extends Application {
 //	        Runnable onEnd = new Runnable() {
 //	            @Override
 //	            public void run() {
-	               // mp.dispose();
+	                mp.dispose();
 	                mp = new MediaPlayer(m);
-	                mp.setAutoPlay(false);
-	                mp.play();
+	                mp.setAutoPlay(true);
 	                mp.setCycleCount(MediaPlayer.INDEFINITE);
-	                
+	                mp.play();
 //	            }
 //	        };
 //	        mp.setOnEndOfMedia(onEnd);
