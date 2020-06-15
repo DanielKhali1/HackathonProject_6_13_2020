@@ -167,10 +167,12 @@ public class app extends Application {
 				
 				platforms.remove(i);
 				
+
 				
 				sfx = new Media(getClass().getResource("res/boingboi.wav").toString());
 				mpsfx = new MediaPlayer(sfx);
 				mpsfx.play();
+
 				break;
 				
 			}
@@ -229,12 +231,11 @@ public class app extends Application {
 //	        Runnable onEnd = new Runnable() {
 //	            @Override
 //	            public void run() {
-	               // mp.dispose();
+	                mp.dispose();
 	                mp = new MediaPlayer(m);
 	                mp.setAutoPlay(true);
 	                mp.setCycleCount(MediaPlayer.INDEFINITE);
 	                mp.play();
-	                
 //	            }
 //	        };
 //	        mp.setOnEndOfMedia(onEnd);
