@@ -13,7 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -21,6 +20,8 @@ import javafx.scene.text.TextAlignment;
 
 public class app extends Application {
 
+	Timeline timeline;
+	
 	public final int width = 1080;
 	public final int height = 720;
 	public final int initialPlatforms = 50;
@@ -54,6 +55,9 @@ public class app extends Application {
 	ArrayList<ParticleSystem> particleSystems = new ArrayList<ParticleSystem>();
 	Media m;
     MediaPlayer mp;
+    Media sfx;
+    MediaPlayer mpsfx;
+    
 	int[] colors = { 1, 0, 0 };
 	
 	int score = 0;
@@ -138,6 +142,7 @@ public class app extends Application {
 							|| (colors[2] == 1 && platforms.get(i).color == 3)
 							|| (colors[1] == 1 && platforms.get(i).color == 2))) 
 			{
+				mpsfx = new MediaPlayer(sfx);
 				player.position.y = platforms.get(i).getRect().getLayoutY() - player.playerBody.getFitHeight();
 				player.velocity = new Vector(0, -BOUNCE_SPEED);
 				
@@ -165,6 +170,7 @@ public class app extends Application {
 				break;
 				
 			}
+			mpsfx.play();
 		}
 		
 		if (player.position.y > height)
@@ -189,6 +195,7 @@ public class app extends Application {
 			platforms.get(i).getRect().setLayoutY(platforms.get(i).getRect().getLayoutY()+Math.abs(playerVelocity));
 			if(platforms.get(i).getRect().getLayoutY() > height)
 			{
+				//mpsfx.play();
 				gamePane.getChildren().remove(platforms.get(i).getRect());
 				platforms.remove(i);
 				i--;
@@ -209,18 +216,19 @@ public class app extends Application {
 	 */
 	private void initialize(Stage primaryStage) 
 	{
-		
+
 		try {
 			m = new Media(getClass().getResource("res/BeepBox-Song.wav").toString());
 		    mp = new MediaPlayer(m);
 //	        Runnable onEnd = new Runnable() {
 //	            @Override
 //	            public void run() {
-	                mp.dispose();
+	               // mp.dispose();
 	                mp = new MediaPlayer(m);
-	                mp.setAutoPlay(true);
-	                mp.setCycleCount(MediaPlayer.INDEFINITE);
+	                mp.setAutoPlay(false);
 	                mp.play();
+	                mp.setCycleCount(MediaPlayer.INDEFINITE);
+	                
 //	            }
 //	        };
 //	        mp.setOnEndOfMedia(onEnd);
@@ -232,6 +240,8 @@ public class app extends Application {
 	        ex.printStackTrace();
 		}
 		
+		sfx = new Media(getClass().getResource("res/boingboi.MP3").toString());
+		mpsfx = new MediaPlayer(sfx);
 		
 		pane.getChildren().add(gamePane);
 		pane.getChildren().add(titlePane);
@@ -332,6 +342,10 @@ public class app extends Application {
 					//System.exit(1);
 				}
 			}
+			if(e.getCode() == KeyCode.UP)
+			{
+				timeline.play();
+			}
 		});
 		
 		scene.setOnKeyReleased
@@ -377,12 +391,11 @@ public class app extends Application {
 		initialize(primaryStage);
 		
 		// begins the game loop
-		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20), (ActionEvent event) -> {
+		timeline = new Timeline(new KeyFrame(Duration.millis(20), (ActionEvent event) -> {
 			update();
 		}));
 		
 		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.play();
 	}
 	
 	@Override
