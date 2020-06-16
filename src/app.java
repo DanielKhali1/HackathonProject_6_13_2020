@@ -30,7 +30,7 @@ public class app extends Application {
 	public final double MOVESPEED = 10;
 	public final double GRAVITY = .3;
 	public final double BOUNCE_SPEED = 13;
-	public final int IMAGESIZE = 50; 
+	public final int IMAGESIZE = 60; 
 	
 	boolean movingLeft = false;
 	boolean isDead = false; 
@@ -304,7 +304,7 @@ public class app extends Application {
 				colors[0] = 1;
 				colors[1] = 0;
 				colors[2] = 0;
-				player.changeImage("slimeRed.png");
+				player.changeImage("redboi.gif");
 
 			}
 			if(e.getCode() == KeyCode.S)
@@ -314,7 +314,7 @@ public class app extends Application {
 				colors[0] = 0;
 				colors[1] = 1;
 				colors[2] = 0;
-				player.changeImage("slimeBlue.png");
+				player.changeImage("blueboi.gif");
 			}
 			if(e.getCode() == KeyCode.D)
 			{
@@ -324,7 +324,7 @@ public class app extends Application {
 				colors[0] = 0;
 				colors[1] = 0;
 				colors[2] = 1;
-				player.changeImage("slimeYellow.png");
+				player.changeImage("yellowboi.gif");
 			}
 			if(e.getCode() == KeyCode.R)
 			{
