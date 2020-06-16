@@ -14,5 +14,8 @@ public class HighscoreFileOperations
 	 }
 	
 	class Record
+	{
+		
+	}
 
 }
