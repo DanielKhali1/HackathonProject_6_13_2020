@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -14,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -58,6 +60,9 @@ public class app extends Application {
     Media sfx;
     MediaPlayer mpsfx;
     
+	Media switchm;
+	MediaPlayer switchc;
+    
 	int[] colors = { 1, 0, 0 };
 	
 	int score = 0;
@@ -67,7 +72,7 @@ public class app extends Application {
 	Text deathtxt; 
 	
 	Timeline timeline;
-	
+	boolean start = true;
 	/*
 	 * RUNS PER FRAME OF THE GAME
 	 * 
@@ -111,15 +116,11 @@ public class app extends Application {
 		}
 		
 		
-		
 		/**
 		 * FUNCTIONALITY THAT FORCES PLAYER (IF OUT OF BOUNDS) TELEPORT TO OTHER SIDE OF SCREEN
 		 */
 		if(player.position.x < -player.playerBody.getFitWidth()) player.position.x = width;
 		if(player.position.x > width) player.position.x = 0-player.playerBody.getFitWidth();
-		
-		
-		
 		
 		if(player.position.y < 10)
 		{
@@ -182,7 +183,6 @@ public class app extends Application {
 		if (player.position.y > height)
 		{
 			isDead = true; 
-			deathtxt.setVisible(true);
 
 		}
 	}	
@@ -226,6 +226,9 @@ public class app extends Application {
 	{
 
 		try {
+			switchm = new Media(getClass().getResource("res/switch.wav").toString());
+			switchc = new MediaPlayer(switchm);
+		    ((Pane)scene.getRoot()).getChildren().add(new MediaView(switchc));
 			m = new Media(getClass().getResource("res/BeepBox-Song.wav").toString());
 		    mp = new MediaPlayer(m);
 //	        Runnable onEnd = new Runnable() {
@@ -262,29 +265,11 @@ public class app extends Application {
 		d_Yellow_bt.relocate(300, 630);
 		d_Yellow_bt.setStyle("-fx-background-color: yellow; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 
-		titletxt = new Text("Jumpy Boi");
-		titletxt.relocate(320, 220);
-		titletxt.setStyle("-fx-font-size: 80; -fx-font-weight: bold");
-		
-		play_bt.relocate(470, 350);
-		play_bt.setStyle("-fx-background-color: white; -fx-font-size: 30; -fx-font-weight: bold; -fx-border-color: black; -fx-border-width: 5");
-		
-		hiscore_bt.relocate(438, 450);
-		hiscore_bt.setStyle("-fx-background-color: white; -fx-font-size: 30; -fx-font-weight: bold; -fx-border-color: black; -fx-border-width: 5");
 		
 		heighttxt = new Text("Score: " + score+"");
 		heighttxt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
 		heighttxt.relocate(20, 20);
 		pane.getChildren().add(heighttxt);
-		
-		deathtxt = new Text("Looks like you chose the wrong color!\nPress 'R' to restart.");
-		deathtxt.setTextAlignment(TextAlignment.CENTER);
-		deathtxt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
-		deathtxt.relocate(275, 200);
-		deathtxt.setVisible(false);
-		
-		
-		
 		
 		for(int i = 0; i < initialPlatforms; i++)
 		{
@@ -295,11 +280,6 @@ public class app extends Application {
 		
 		pane.getChildren().add(player.playerBody);
 		pane.getChildren().addAll(a_Red_bt, s_Blue_bt, d_Yellow_bt);
-		pane.getChildren().add(deathtxt);
-		
-		
-		titlePane.getChildren().addAll(titletxt, play_bt, hiscore_bt);
-		titlePane.setVisible(false);
 	}
 	
 	private void takeKeyInput(Stage primaryStage) 
@@ -353,26 +333,19 @@ public class app extends Application {
 					System.exit(1);
 				}
 			}
-			if(e.getCode() == KeyCode.UP)
-			{
-				timeline.play();
-			}
 			
 			if(e.getCode() == KeyCode.A || e.getCode() == KeyCode.S || e.getCode() == KeyCode.D )
 			{
-				Task task = new Task<Void>() {
-					@Override public Void call() {
-							
-						// TODO Auto-generated method stub
-						Media sfx = new Media(getClass().getResource("res/switch.wav").toString());
-						MediaPlayer mpsfx = new MediaPlayer(sfx);
-						mpsfx.play();
-						return null;
-						
-				}};
-				
-				new Thread(task).start();
+				switchc.seek(switchc.getStartTime());	
+				switchc.play();
 			}
+			
+			if(start)
+			{
+				timeline.play();
+				start = false;
+			}
+			
 		});
 		
 		scene.setOnKeyReleased
