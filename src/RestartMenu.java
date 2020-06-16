@@ -13,13 +13,13 @@ public class RestartMenu extends Application
 	Pane pane = new Pane();
     Scene scene = new Scene(pane, 1080, 720);
     
-    public RestartMenu()
+    public RestartMenu(int score)
     {
-    	
+    	this.score = score;
     }
     
     @Override
-    public void start(Stage primaryStage) throws Exception 
+    public void start(Stage primaryStage)  
     {
     	Button restart_bt = new Button("RESTART");
     	Button mainmenu_bt = new Button("MAIN MENU");
@@ -30,6 +30,17 @@ public class RestartMenu extends Application
     	restart_bt.relocate(200, 450);
     	mainmenu_bt.setStyle("-fx-background-color: white; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
     	mainmenu_bt.relocate(400, 450);
+    	
+    	restart_bt.setOnAction(e->{
+    		new app().start(new Stage());
+			primaryStage.close();
+    	});
+    	
+    	restart_bt.setOnAction(e->{
+    		new Menu().start(new Stage());
+			primaryStage.close();
+    	});
+    	
     	
     	pane.getChildren().addAll(restart_bt, mainmenu_bt, hiscore_txt, hiscore_txtfld);
     	
