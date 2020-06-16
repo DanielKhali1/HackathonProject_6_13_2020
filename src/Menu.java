@@ -13,7 +13,7 @@ public class Menu extends Application
 	Scene scene = new Scene(pane, 1080, 720);
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage)  {
 		
 		Button highscore = new Button("Highscore");
 		Button options = new Button("Options");
@@ -86,7 +86,8 @@ public class Menu extends Application
 		});
 		
 		highscore.setOnAction(e->{
-			
+			new Highscore().start(new Stage());
+			primaryStage.close();
 		});
 		
 		
