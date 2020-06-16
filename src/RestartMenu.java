@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -54,7 +55,7 @@ public class RestartMenu extends Application
     	
     	hiscore_txtfld.relocate(390, 365);
     	hiscore_txtfld.setPrefSize(300, 50);
-    	hiscore_txtfld.setStyle("-fx-font-size: 30; -fx-border-color: black; -fx-font-weight: bold");
+    	hiscore_txtfld.setStyle("-fx-font-size: 30; -fx-border-color: black; -fx-font-weight: bold; -fx-background-color: yellow");
     	
     	restart_bt.setStyle("-fx-text-fill: black; -fx-background-color: white; -fx-font-size: 30; -fx-border-color: gold; -fx-border-width: 5; -fx-font-weight: bold");
     	restart_bt.relocate(310, 480);
@@ -81,9 +82,24 @@ public class RestartMenu extends Application
 			primaryStage.close();
     	});
     	
-    	restart_bt.setOnAction(e->{
+    	mainmenu_bt.setOnAction(e->{
     		new Menu().start(new Stage());
 			primaryStage.close();
+    	});
+
+    	
+    	scene.setOnKeyPressed(e->{
+    		if(e.getCode() == KeyCode.ENTER)
+    		{
+    			try {
+					HighscoreFileOperations.saveToScores(hiscore_txtfld.getText(), score);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    	    	hiscore_txtfld.setStyle("-fx-font-size: 30; -fx-border-color: black; -fx-font-weight: bold; -fx-background-color: palegreen");
+    		
+    		}
     	});
     	
     	

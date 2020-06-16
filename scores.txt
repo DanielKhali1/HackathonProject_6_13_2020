@@ -2,3 +2,6 @@ danny,32
 ff,33
 wow,1
 viv,8000
+yourbadatthisgame,817
+ugh,480
+Mr. Sauce,2652
