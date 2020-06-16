@@ -20,7 +20,7 @@ public class Player
 	public Player(Vector Pos, double moveSpeed, double gravity, int imageSize)
 	{
 		rotation = 0;
-		img = new Image("res/slimeRed.png");
+		img = new Image("res/redboi.gif");
 		playerBody = new ImageView(img);
 		
 		playerBody.setFitHeight(imageSize);
