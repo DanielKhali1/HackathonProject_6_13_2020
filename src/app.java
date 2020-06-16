@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -19,7 +17,6 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.text.TextAlignment;
 
 public class app extends Application {
 
@@ -77,7 +74,7 @@ public class app extends Application {
 	 * RUNS PER FRAME OF THE GAME
 	 * 
 	 */
-	private void update() 
+	private void update(Stage primaryStage) 
 	{
 		
 		updatePlatform();
@@ -182,8 +179,11 @@ public class app extends Application {
 		
 		if (player.position.y > height)
 		{
+			mp.stop();
+			timeline.stop();
 			isDead = true; 
-
+			new RestartMenu(score).start(new Stage());
+			primaryStage.close();
 		}
 	}	
 	
@@ -392,7 +392,7 @@ public class app extends Application {
 		
 		// begins the game loop
 		timeline = new Timeline(new KeyFrame(Duration.millis(20), (ActionEvent event) -> {
-			update();
+			update(primaryStage);
 		}));
 		
 		timeline.setCycleCount(Timeline.INDEFINITE);

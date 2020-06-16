@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -15,13 +16,13 @@ public class RestartMenu extends Application
 	Pane pane = new Pane();
     Scene scene = new Scene(pane, 1080, 720);
     
-    public RestartMenu()
+    public RestartMenu(int score)
     {
-    	
+    	this.score = score;
     }
     
     @Override
-    public void start(Stage primaryStage) throws Exception 
+    public void start(Stage primaryStage)  
     {
     	Button restart_bt = new Button("RESTART");
     	Button mainmenu_bt = new Button("MAIN MENU");
@@ -54,7 +55,7 @@ public class RestartMenu extends Application
     	
     	hiscore_txtfld.relocate(390, 365);
     	hiscore_txtfld.setPrefSize(300, 50);
-    	hiscore_txtfld.setStyle("-fx-font-size: 30; -fx-border-color: black; -fx-font-weight: bold");
+    	hiscore_txtfld.setStyle("-fx-font-size: 30; -fx-border-color: black; -fx-font-weight: bold; -fx-background-color: yellow");
     	
     	restart_bt.setStyle("-fx-text-fill: black; -fx-background-color: white; -fx-font-size: 30; -fx-border-color: gold; -fx-border-width: 5; -fx-font-weight: bold");
     	restart_bt.relocate(310, 480);
@@ -76,6 +77,33 @@ public class RestartMenu extends Application
 			mainmenu_bt.setStyle("-fx-text-fill: black; -fx-background-color: white; -fx-font-size: 30; -fx-border-color: blue; -fx-border-width: 5; -fx-font-weight: bold");
 		});
     	
+    	restart_bt.setOnAction(e->{
+    		new app().start(new Stage());
+			primaryStage.close();
+    	});
+    	
+    	mainmenu_bt.setOnAction(e->{
+    		new Menu().start(new Stage());
+			primaryStage.close();
+    	});
+
+    	
+    	scene.setOnKeyPressed(e->{
+    		if(e.getCode() == KeyCode.ENTER)
+    		{
+    			try {
+					HighscoreFileOperations.saveToScores(hiscore_txtfld.getText(), score);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    	    	hiscore_txtfld.setStyle("-fx-font-size: 30; -fx-border-color: black; -fx-font-weight: bold; -fx-background-color: palegreen");
+    		
+    		}
+    	});
+    	
+    	
+
     	pane.getChildren().addAll(restart_bt, mainmenu_bt, exit, death_txt, score_txt, hiscore_txtfld);
     	
         primaryStage.setScene(scene);

@@ -13,7 +13,7 @@ public class HighscoreFileOperations
 	static public void saveToScores(String name, int score) throws Exception
 	{
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(PATH), true));
-		bw.append(name + "," + score+"\n");
+		bw.append("\n" + name + "," + score);
 		bw.close();
 	}
 
