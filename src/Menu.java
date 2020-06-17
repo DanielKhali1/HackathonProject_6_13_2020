@@ -5,8 +5,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,12 +20,18 @@ public class Menu extends Application
 		Button highscore = new Button("Highscore");
 		Button options = new Button("Options");
 		
+		Image bouncyboi = new Image("res/changeboi.gif");
+		ImageView ivbouncyboi = new ImageView(bouncyboi);
+		ivbouncyboi.setFitHeight(600);
+		ivbouncyboi.setFitWidth(600);
+		ivbouncyboi.relocate(550, 50);
+		
 		Button start = new Button("Play");
 		start.relocate(470, 350);
 		
 		
 		Text titletxt = new Text("Jumpy Boi");
-		titletxt.relocate(320, 100);
+		titletxt.relocate(200, 100);
 		titletxt.setStyle("-fx-font-size: 80; -fx-font-weight: bold");
 		
 		highscore.relocate(438, 450);
@@ -83,24 +87,6 @@ public class Menu extends Application
 			options.setStyle("-fx-background-color: white; -fx-font-size: "+font_size+"; -fx-border-color: pink; -fx-font-weight: bold;-fx-border-width: 5");
 		});
 		
-		options.setOnAction(e->{
-			for(int i = 0; i < 1000; i++)
-			{
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Fuck off");
-				alert.setHeaderText("Fuck off");
-				ImageView x = new ImageView(new Image("res/middlefinger.png"));
-				x.setFitHeight(50);
-				x.setFitWidth(50);
-				alert.setContentText("THIS FEATURE WASN'T FINISHED YET..\nGO AWAY NOW");
-				alert.setGraphic(x);
-				alert.setX(Math.random() * 1000);
-				alert.setY(Math.random() * 1000);
-				alert.show();
-				
-			}
-		});
-		
 		
 		start.setOnAction(e->{
 			new app().start(new Stage());
@@ -113,7 +99,7 @@ public class Menu extends Application
 		});
 		
 		
-		pane.getChildren().addAll(titletxt, vb, exit);
+		pane.getChildren().addAll(titletxt, vb, exit, ivbouncyboi);
 		
 		primaryStage.initStyle(StageStyle.UNDECORATED);
 		primaryStage.setScene(scene);
