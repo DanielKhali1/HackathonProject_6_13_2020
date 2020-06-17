@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Menu extends Application
 {
@@ -18,12 +20,18 @@ public class Menu extends Application
 		Button highscore = new Button("Highscore");
 		Button options = new Button("Options");
 		
+		Image bouncyboi = new Image("res/changeboi.gif");
+		ImageView ivbouncyboi = new ImageView(bouncyboi);
+		ivbouncyboi.setFitHeight(600);
+		ivbouncyboi.setFitWidth(600);
+		ivbouncyboi.relocate(550, 50);
+		
 		Button start = new Button("Play");
 		start.relocate(470, 350);
 		
 		
 		Text titletxt = new Text("Jumpy Boi");
-		titletxt.relocate(320, 100);
+		titletxt.relocate(200, 100);
 		titletxt.setStyle("-fx-font-size: 80; -fx-font-weight: bold");
 		
 		highscore.relocate(438, 450);
@@ -91,7 +99,7 @@ public class Menu extends Application
 		});
 		
 		
-		pane.getChildren().addAll(titletxt, vb, exit);
+		pane.getChildren().addAll(titletxt, vb, exit, ivbouncyboi);
 		
 		primaryStage.initStyle(StageStyle.UNDECORATED);
 		primaryStage.setScene(scene);

@@ -17,6 +17,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -42,6 +43,7 @@ public class app extends Application {
 	Button a_Red_bt = new Button("A");
 	Button s_Blue_bt = new Button("S");
 	Button d_Yellow_bt = new Button("D");
+	Text how2play_txt = new Text("Use 'A', 'S', and 'D' to change colors and your right and left\narrow keys to move. Press any button to start.");
 	Player player = new Player(new Vector(width/2, height/2), MOVESPEED, GRAVITY, IMAGESIZE);
 
 	Button play_bt = new Button("PLAY");
@@ -124,8 +126,17 @@ public class app extends Application {
 		{
 			if(score < 10000)
 			{
-				background_stuff.add(new Entity((Math.random() < 0.5) ? Entity.TYPE.CLOUD_1 : Entity.TYPE.CLOUD_2, ((int)(Math.random() + 0.5)) == 1, 1, Math.random() * height));
-				backgroundPane.getChildren().add(background_stuff.get(background_stuff.size()-1).body);
+				if(Math.random()>.02)
+				{
+					background_stuff.add(new Entity((Math.random() < 0.5) ? Entity.TYPE.CLOUD_1 : Entity.TYPE.CLOUD_2, ((int)(Math.random() + 0.5)) == 1, 1, Math.random() * height));
+					backgroundPane.getChildren().add(background_stuff.get(background_stuff.size()-1).body);
+				}
+				
+				else
+				{
+					background_stuff.add(new Entity(Entity.TYPE.PLANE, true, 3, Math.random() * height));
+					backgroundPane.getChildren().add(background_stuff.get(background_stuff.size()-1).body);
+				}
 			}
 			else
 			{
@@ -340,6 +351,10 @@ public class app extends Application {
 		
 		takeKeyInput(primaryStage);
 		
+		how2play_txt.relocate(130, 280);
+		how2play_txt.setTextAlignment(TextAlignment.CENTER);
+		how2play_txt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
+		
 		a_Red_bt.relocate(100, 630);
 		a_Red_bt.setStyle("-fx-background-color: red; -fx-font-size: 30; -fx-border-color: black; -fx-border-width: 5");
 		s_Blue_bt.relocate(200, 630);
@@ -361,7 +376,7 @@ public class app extends Application {
 		
 		
 		pane.getChildren().add(player.playerBody);
-		pane.getChildren().addAll(a_Red_bt, s_Blue_bt, d_Yellow_bt);
+		pane.getChildren().addAll(a_Red_bt, s_Blue_bt, d_Yellow_bt, how2play_txt);
 	}
 	
 	private void takeKeyInput(Stage primaryStage) 
@@ -424,6 +439,7 @@ public class app extends Application {
 			
 			if(start)
 			{
+				how2play_txt.setVisible(false);
 				timeline.play();
 				start = false;
 			}
@@ -503,7 +519,8 @@ class Entity
 			CLOUD_2,
 			STAR,
 			PLANET_1,
-			PLANET_2
+			PLANET_2,
+			PLANE,
 	};
 	
 	ImageView body;
@@ -553,10 +570,24 @@ class Entity
 				body.relocate(1080*Math.random(), -200);
 
 			break;
-		}
-		body.setFitHeight(100 * Math.random() + 100);
-		body.setFitWidth(100 * Math.random() + 100);
+			
+			case PLANE:
+				body = new ImageView(new Image("res/planeboi.gif"));
+				body.relocate(1180, 720*Math.random());
 
+			break;
+		}
+		if(type == TYPE.CLOUD_2 || type == TYPE.CLOUD_1)
+		{	
+			body.setFitHeight(100 * Math.random() + 100);
+			body.setFitWidth(100 * Math.random() + 100);
+		}
+		
+		else
+		{	
+			body.setFitHeight(100);
+			body.setFitWidth(100);
+		}
 	}
 	
 	public void update(double vel)
