@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -26,11 +28,12 @@ public class app extends Application {
 	public final int initialPlatforms = 50;
 	
 	double playerVelocity = 0;
-	double spawnChance = 0.08;
+	double spawnChance = 0.1;
 	public final double MOVESPEED = 10;
 	public final double GRAVITY = .3;
 	public final double BOUNCE_SPEED = 13;
 	public final int IMAGESIZE = 60; 
+	public final double background_Entity_Spawn_Chance = 0.03;
 	
 	boolean movingLeft = false;
 	boolean isDead = false; 
@@ -48,9 +51,12 @@ public class app extends Application {
 	Pane gamePane = new Pane();
 	Pane titlePane = new Pane();
 	Scene scene = new Scene(pane, width, height);
+	Pane backgroundPane = new Pane();
+	
+	
 	
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
-	
+	ArrayList<Entity> background_stuff = new ArrayList<Entity>(); 
 	ArrayList<ParticleSystem> particleSystems = new ArrayList<ParticleSystem>();
 	Media m;
     MediaPlayer mp;
@@ -70,14 +76,85 @@ public class app extends Application {
 	
 	Timeline timeline;
 	boolean start = true;
+	
 	/*
 	 * RUNS PER FRAME OF THE GAME
 	 * 
 	 */
 	private void update(Stage primaryStage) 
 	{
+		if(score > 20000)
+			pane.setStyle("-fx-background-color: #15243d;");
+		else if(score > 19000)
+			pane.setStyle("-fx-background-color: #1f3252;");
+		else if(score > 18000)
+			pane.setStyle("-fx-background-color: #283e63;");
+		else if(score > 17000)
+			pane.setStyle("-fx-background-color: #2f4770;");
+		else if(score > 16000)
+			pane.setStyle("-fx-background-color: #37517d;");
+		else if(score > 15000)
+			pane.setStyle("-fx-background-color: #3f5b8a;");
+		else if(score > 14000)
+			pane.setStyle("-fx-background-color: #4c6b9e;");
+		else if(score > 13000)
+			pane.setStyle("-fx-background-color: #5576ab;");
+		else if(score > 12000)
+			pane.setStyle("-fx-background-color: #5e80b8;");
+		else if(score > 11000)
+			pane.setStyle("-fx-background-color: #6b8fc9;");
+		else if(score > 10000)
+			pane.setStyle("-fx-background-color: #7298d4;");
+		else if(score > 9000)
+			pane.setStyle("-fx-background-color: #84a9e3;");
+		else if(score > 8000)
+			pane.setStyle("-fx-background-color: #9dbef2;");
+		else if(score > 7000)
+			pane.setStyle("-fx-background-color: #b5d1ff;");
+		else if(score > 6000)
+			pane.setStyle("-fx-background-color: #bfd7ff;");
+		else if(score > 5000)
+			pane.setStyle("-fx-background-color: #cddefa;");
+		
+
+		
+		
+		
+		if(Math.random() < background_Entity_Spawn_Chance)
+		{
+			if(score < 10000)
+			{
+				background_stuff.add(new Entity((Math.random() < 0.5) ? Entity.TYPE.CLOUD_1 : Entity.TYPE.CLOUD_2, ((int)(Math.random() + 0.5)) == 1, 1, Math.random() * height));
+				backgroundPane.getChildren().add(background_stuff.get(background_stuff.size()-1).body);
+			}
+			else
+			{
+				if(Math.random() < 0.2)
+				{
+					background_stuff.add(new Entity((Math.random() < 0.5) ? Entity.TYPE.PLANET_1 : Entity.TYPE.PLANET_2, ((int)(Math.random() + 0.5)) == 1, 0, Math.random() * height));
+					backgroundPane.getChildren().add(background_stuff.get(background_stuff.size()-1).body);
+				}
+				else
+				{
+					background_stuff.add(new Entity(Entity.TYPE.STAR, false, 0, Math.random() * height));
+					backgroundPane.getChildren().add(background_stuff.get(background_stuff.size()-1).body);
+				}
+			}
+		}
+		for(int i = 0; i < background_stuff.size(); i++)
+		{
+			background_stuff.get(i).update(playerVelocity);
+			if(background_stuff.get(i).body.getLayoutX() > width+background_stuff.get(i).body.getFitWidth() || background_stuff.get(i).body.getLayoutX() < 0-background_stuff.get(i).body.getFitWidth() )
+			{
+				gamePane.getChildren().remove(background_stuff.get(i).body);
+				background_stuff.remove(i);
+			}
+		}
 		
 		updatePlatform();
+		
+			
+		
 		
 		if(movingRight)
 		{
@@ -132,49 +209,53 @@ public class app extends Application {
 		else
 			playerVelocity = 0;
 
-		for(int i = 0; i < platforms.size(); i++)
+		
+		if(player.velocity.y > 0)
 		{
-			if (player.playerBody.getLayoutX() < platforms.get(i).getRect().getLayoutX() + platforms.get(i).getRect().getWidth() &&
-					player.playerBody.getLayoutX()+player.playerBody.getFitWidth() > platforms.get(i).getRect().getLayoutX() &&
-					player.playerBody.getLayoutY() < platforms.get(i).getRect().getLayoutY() + platforms.get(i).getRect().getHeight() &&
-					player.playerBody.getLayoutY() + player.playerBody.getFitHeight() > platforms.get(i).getRect().getLayoutY()
-					&& player.velocity.y > 0 && ( ( colors[0] == 1 && platforms.get(i).color == 1) 
-							|| (colors[2] == 1 && platforms.get(i).color == 3)
-							|| (colors[1] == 1 && platforms.get(i).color == 2))) 
+			for(int i = 0; i < platforms.size(); i++)
 			{
-				mpsfx = new MediaPlayer(sfx);
-				player.position.y = platforms.get(i).getRect().getLayoutY() - player.playerBody.getFitHeight();
-				player.velocity = new Vector(0, -BOUNCE_SPEED);
-				
-				if(platforms.get(i).color == 1)
+				if (player.playerBody.getLayoutX() < platforms.get(i).getRect().getLayoutX() + platforms.get(i).getRect().getWidth() &&
+						player.playerBody.getLayoutX()+player.playerBody.getFitWidth() > platforms.get(i).getRect().getLayoutX() &&
+						player.playerBody.getLayoutY() < platforms.get(i).getRect().getLayoutY() + platforms.get(i).getRect().getHeight() &&
+						player.playerBody.getLayoutY() + player.playerBody.getFitHeight() > platforms.get(i).getRect().getLayoutY()
+						&& player.velocity.y > 0 && ( ( colors[0] == 1 && platforms.get(i).color == 1) 
+								|| (colors[2] == 1 && platforms.get(i).color == 3)
+								|| (colors[1] == 1 && platforms.get(i).color == 2))) 
 				{
-					particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.RED)));
-					particleSystems.get(particleSystems.size()-1).play(gamePane);
+					mpsfx = new MediaPlayer(sfx);
+					player.position.y = platforms.get(i).getRect().getLayoutY() - player.playerBody.getFitHeight();
+					player.velocity = new Vector(0, -BOUNCE_SPEED);
+					
+					if(platforms.get(i).color == 1)
+					{
+						particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.RED)));
+						particleSystems.get(particleSystems.size()-1).play(gamePane);
+					}
+					else if(platforms.get(i).color == 3)
+					{
+						particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.YELLOW)));
+						particleSystems.get(particleSystems.size()-1).play(gamePane);
+					}
+					else if(platforms.get(i).color == 2)
+					{
+						particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.BLUE)));
+						particleSystems.get(particleSystems.size()-1).play(gamePane);
+					}				
+					gamePane.getChildren().remove(platforms.get(i).getRect());
+					
+					platforms.remove(i);
+					
+	
+					
+					sfx = new Media(getClass().getResource("res/boingboi.wav").toString());
+					mpsfx = new MediaPlayer(sfx);
+					mpsfx.play();
+	
+					break;
+					
 				}
-				else if(platforms.get(i).color == 3)
-				{
-					particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.YELLOW)));
-					particleSystems.get(particleSystems.size()-1).play(gamePane);
-				}
-				else if(platforms.get(i).color == 2)
-				{
-					particleSystems.add(new ParticleSystem(width, height, player.position.clone(), 4, 2, 10, 2,0.3,new Particle(25, Particle.PARTICLE_TYPE.BLUE)));
-					particleSystems.get(particleSystems.size()-1).play(gamePane);
-				}				
-				gamePane.getChildren().remove(platforms.get(i).getRect());
-				
-				platforms.remove(i);
-				
-
-				
-				sfx = new Media(getClass().getResource("res/boingboi.wav").toString());
-				mpsfx = new MediaPlayer(sfx);
-				mpsfx.play();
-
-				break;
 				
 			}
-			
 		}
 		
 		if (player.position.y > height)
@@ -225,6 +306,7 @@ public class app extends Application {
 	private void initialize(Stage primaryStage) 
 	{
 
+		pane.setStyle("-fx-background-color:#c4feff" );
 		try {
 			switchm = new Media(getClass().getResource("res/switch.wav").toString());
 			switchc = new MediaPlayer(switchm);
@@ -252,7 +334,7 @@ public class app extends Application {
 		
 		sfx = new Media(getClass().getResource("res/boingboi.mp3").toString());
 		mpsfx = new MediaPlayer(sfx);
-		
+		gamePane.getChildren().add(backgroundPane);
 		pane.getChildren().add(gamePane);
 		pane.getChildren().add(titlePane);
 		
@@ -412,4 +494,75 @@ public class app extends Application {
 		launch(args);
 	}
 
+}
+
+class Entity
+{
+	public enum TYPE{
+			CLOUD_1,
+			CLOUD_2,
+			STAR,
+			PLANET_1,
+			PLANET_2
+	};
+	
+	ImageView body;
+	private TYPE type;
+	private boolean direction;
+	private double speed;
+	
+	public Entity(TYPE type, boolean direction, double speed, double yPosition)
+	{
+		this.type = type;
+		this.direction =direction;
+		this.speed = speed;
+		
+		
+		
+		switch(type)
+		{
+			case CLOUD_1:
+					body = new ImageView(new Image("res/Cloud_1.png"));
+					if(Math.random() < 0.5)
+						body.relocate(((direction)?1080:0-body.getFitWidth()), yPosition);
+					else
+						body.relocate(1080*Math.random(), -200);
+				break;
+				
+			case CLOUD_2:
+					body = new ImageView(new Image("res/Cloud_2.png"));
+					if(Math.random() < 0.5)
+						body.relocate(((direction)?1080:0-body.getFitWidth()), yPosition);
+					else
+						body.relocate(1080*Math.random(), -200);
+				break;
+			case STAR:
+				body = new ImageView(new Image("res/starboi.gif"));
+				body.relocate(1080*Math.random(), -200);
+
+			break;
+			
+			case PLANET_1:
+				body = new ImageView(new Image("res/planetboi.gif"));
+				body.relocate(1080*Math.random(), -200);
+
+			break;
+			
+			case PLANET_2:
+				body = new ImageView(new Image("res/planetboi_2.gif"));
+				body.relocate(1080*Math.random(), -200);
+
+			break;
+		}
+		body.setFitHeight(100 * Math.random() + 100);
+		body.setFitWidth(100 * Math.random() + 100);
+
+	}
+	
+	public void update(double vel)
+	{
+		body.setLayoutX(body.getLayoutX() + ((direction)? -speed : speed));
+		body.setLayoutY(body.getLayoutY()+vel*0.2);
+	}
+	
 }
